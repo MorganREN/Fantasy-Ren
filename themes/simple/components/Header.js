@@ -1,4 +1,5 @@
 import LazyImage from '@/components/LazyImage'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { siteConfig } from '@/lib/config'
 import SmartLink from '@/components/SmartLink'
 import CONFIG from '../config'
@@ -13,6 +14,7 @@ export default function Header(props) {
 
   return (
     <header className='text-center justify-between items-center px-6 bg-white h-80 dark:bg-black relative z-10'>
+      <LanguageSwitcher className='absolute right-6 top-6 dark:text-white' />
       <div className='float-none inline-block py-12'>
         <SmartLink href='/'>
           {/* 可使用一张单图作为logo */}
