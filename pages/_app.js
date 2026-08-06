@@ -85,8 +85,8 @@ const MyApp = ({ Component, pageProps }) => {
   const content = (
     <AppErrorBoundary>
       <GlobalContextProvider {...pageProps}>
+        <SEO {...pageProps} />
         <GLayout {...pageProps}>
-          <SEO {...pageProps} />
           <Component {...pageProps} />
         </GLayout>
         <ExternalPlugins {...pageProps} />

@@ -220,6 +220,8 @@ const nextConfig = {
     ? undefined
     : {
       defaultLocale: BLOG.LANG,
+      // 默认保持用户访问的 URL，不根据浏览器语言自动跳转。
+      localeDetection: false,
       // 支持的所有多语言,按需填写即可
       locales: locales
     },
