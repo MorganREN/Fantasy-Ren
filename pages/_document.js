@@ -2,9 +2,7 @@
 import BLOG from '@/blog.config'
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 
-const isLocalFontAwesome = BLOG.FONT_AWESOME?.startsWith(
-  '/vendor/fontawesome/'
-)
+const isLocalFontAwesome = BLOG.FONT_AWESOME?.startsWith('/vendor/fontawesome/')
 
 // 预先设置深色模式的脚本内容
 const darkModeScript = `
@@ -44,8 +42,9 @@ class MyDocument extends Document {
   }
 
   render() {
+    const documentLocale = this.props.__NEXT_DATA__?.locale || BLOG.LANG
     return (
-      <Html lang={BLOG.LANG}>
+      <Html lang={documentLocale}>
         <Head>
           <link rel='preconnect' href='https://images.unsplash.com' />
           <link rel='dns-prefetch' href='//images.unsplash.com' />

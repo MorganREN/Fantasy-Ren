@@ -13,11 +13,57 @@
     }
   },
   "category": {
-    "en_to_zh": {},
-    "zh_to_en": {}
+    "en_to_zh": {
+      "Learning & Reflection": "学习思考",
+      "Technical Sharing": "技术分享",
+      "Essays & Notes": "碎片杂文",
+      "On the Road": "在路上"
+    },
+    "zh_to_en": {
+      "学习思考": "Learning & Reflection",
+      "技术分享": "Technical Sharing",
+      "碎片杂文": "Essays & Notes",
+      "在路上": "On the Road"
+    }
   },
   "tags": {
-    "en_to_zh": {},
-    "zh_to_en": {}
+    "en_to_zh": {
+      "Writing": "文字",
+      "Reflection": "思考",
+      "News": "新闻",
+      "Tools": "工具",
+      "Development": "开发",
+      "Web Building": "建站",
+      "Finance": "金钱",
+      "Health": "健康",
+      "Python": "Python",
+      "Poetry": "诗歌",
+      "Frontier": "前沿",
+      "Deep Learning": "深度学习",
+      "Travel": "旅行",
+      "Time Series": "时间序列",
+      "AI": "AI",
+      "Blockchain": "Blockchain",
+      "Civil Engineering": "土木工程"
+    },
+    "zh_to_en": {
+      "文字": "Writing",
+      "思考": "Reflection",
+      "新闻": "News",
+      "工具": "Tools",
+      "开发": "Development",
+      "建站": "Web Building",
+      "金钱": "Finance",
+      "健康": "Health",
+      "Python": "Python",
+      "诗歌": "Poetry",
+      "前沿": "Frontier",
+      "深度学习": "Deep Learning",
+      "旅行": "Travel",
+      "时间序列": "Time Series",
+      "AI": "AI",
+      "Blockchain": "Blockchain",
+      "土木工程": "Civil Engineering"
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 import throttle from 'lodash.throttle'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
@@ -30,6 +31,7 @@ const Header = props => {
   const [isOpen, changeShow] = useState(false)
   const showSearchButton = siteConfig('HEXO_MENU_SEARCH', false, CONFIG)
   const showRandomButton = siteConfig('HEXO_MENU_RANDOM', false, CONFIG)
+  const showLanguageSwitcher = siteConfig('HEXO_LANG_SWITCH', true, CONFIG)
 
   const toggleMenuOpen = () => {
     changeShow(!isOpen)
@@ -109,7 +111,8 @@ const Header = props => {
             <SmartLink
               href={'/category'}
               passHref
-              className='mb-3 text-gray-400 hover:text-black dark:text-gray-400 dark:hover:text-white hover:underline cursor-pointer'>
+              className='mb-3 text-gray-400 hover:text-black dark:text-gray-400 dark:hover:text-white hover:underline cursor-pointer'
+            >
               {locale.COMMON.MORE} <i className='fas fa-angle-double-right' />
             </SmartLink>
           </div>
@@ -130,7 +133,8 @@ const Header = props => {
             <SmartLink
               href={'/tag'}
               passHref
-              className='text-gray-400 hover:text-black  dark:hover:text-white hover:underline cursor-pointer'>
+              className='text-gray-400 hover:text-black  dark:hover:text-white hover:underline cursor-pointer'
+            >
               {locale.COMMON.MORE} <i className='fas fa-angle-double-right' />
             </SmartLink>
           </div>
@@ -152,7 +156,8 @@ const Header = props => {
         style={{ backdropFilter: 'blur(3px)' }}
         className={
           'top-0 duration-300 transition-all  shadow-none fixed bg-none dark:bg-hexo-black-gray dark:text-gray-200 text-black w-full z-20 transform border-transparent dark:border-transparent'
-        }>
+        }
+      >
         <div className='w-full flex justify-between items-center px-4 py-2'>
           <div className='flex'>
             <Logo {...props} />
@@ -164,9 +169,11 @@ const Header = props => {
               {' '}
               <MenuListTop {...props} />
             </div>
+            {showLanguageSwitcher && <LanguageSwitcher className='mx-2' />}
             <div
               onClick={toggleMenuOpen}
-              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden'>
+              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden'
+            >
               {isOpen ? (
                 <i className='fas fa-times' />
               ) : (

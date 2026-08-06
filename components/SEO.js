@@ -1,5 +1,6 @@
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
+import { buildLanguageAlternates, localizePath } from '@/lib/i18n/routing'
 import { createSiteUrl, normalizeSiteUrl } from '@/lib/sitemap-utils'
 import { isHttpLink, loadExternalResource } from '@/lib/utils'
 import Head from 'next/head'
@@ -18,7 +19,8 @@ const SEO = props => {
     siteConfig('LINK', siteInfo?.link, NOTION_CONFIG)
   )
   const SUB_PATH = siteConfig('SUB_PATH', '')
-  let url = PATH?.length ? createSiteUrl(LINK, SUB_PATH) || LINK : LINK
+  const siteRoot = PATH?.length ? createSiteUrl(LINK, SUB_PATH) || LINK : LINK
+  let url = siteRoot
   let image
   const router = useRouter()
   const meta = getSEOMeta(props, router, useGlobal()?.locale)
@@ -58,17 +60,27 @@ const SEO = props => {
   if (post?.tags && post?.tags?.length > 0) {
     keywords = post?.tags?.join(',')
   }
+  const language = router?.locale || siteConfig('LANG', 'zh-CN', NOTION_CONFIG)
+  const defaultLocale = router?.defaultLocale || siteConfig('LANG', 'zh-CN')
   if (meta) {
-    url = createSiteUrl(url, meta.slug) || url
+    url =
+      createSiteUrl(
+        siteRoot,
+        localizePath(meta.slug, language, defaultLocale)
+      ) || siteRoot
     image = getAbsoluteImageUrl(meta.image || '/bg_image.jpg', LINK)
   }
   const TITLE = siteConfig('TITLE')
   const title = meta?.title || TITLE
   const description = meta?.description || `${siteInfo?.description}`
   const type = meta?.type === 'Post' ? 'article' : meta?.type || 'website'
-  const language =
-    router?.locale || siteConfig('LANG', 'zh-CN', NOTION_CONFIG)
   const lang = String(language).replace('-', '_') // Facebook OpenGraph 要 zh_CN 這樣的格式才抓得到語言
+  const { alternates: languageAlternates, xDefault } = buildLanguageAlternates({
+    baseUrl: siteRoot,
+    path: meta?.slug || '',
+    locales: router?.locales || [language],
+    defaultLocale
+  })
   const category = Array.isArray(meta?.category)
     ? meta?.category?.[0]
     : meta?.category || KEYWORDS // section 主要是像是 category 這樣的分類，Facebook 用這個來抓連結的分類
@@ -125,7 +137,10 @@ const SEO = props => {
         name='viewport'
         content='width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0'
       />
-      <meta name='robots' content='follow, index, max-snippet:-1, max-image-preview:large, max-video-preview:-1' />
+      <meta
+        name='robots'
+        content='follow, index, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+      />
       <meta charSet='UTF-8' />
       <meta name='format-detection' content='telephone=no' />
       <meta name='mobile-web-app-capable' content='yes' />
@@ -149,6 +164,22 @@ const SEO = props => {
 
       {/* 基础SEO元数据 */}
       <link rel='canonical' href={url} />
+      {languageAlternates.map(alternate => (
+        <link
+          key={`alternate-${alternate.locale}`}
+          rel='alternate'
+          hrefLang={alternate.locale}
+          href={alternate.href}
+        />
+      ))}
+      {xDefault && (
+        <link
+          key='alternate-x-default'
+          rel='alternate'
+          hrefLang='x-default'
+          href={xDefault}
+        />
+      )}
       <meta name='keywords' content={keywords} />
       <meta name='description' content={description} />
       <meta name='author' content={AUTHOR} />
@@ -160,6 +191,15 @@ const SEO = props => {
       <meta name='geo.country' content={siteConfig('GEO_COUNTRY', 'CN')} />
       {/* Open Graph 元数据 */}
       <meta property='og:locale' content={lang} />
+      {languageAlternates
+        .filter(alternate => alternate.locale !== language)
+        .map(alternate => (
+          <meta
+            key={`og-alternate-${alternate.locale}`}
+            property='og:locale:alternate'
+            content={String(alternate.locale).replace('-', '_')}
+          />
+        ))}
       <meta property='og:title' content={title} />
       <meta property='og:description' content={description} />
       <meta property='og:url' content={url} />
@@ -206,7 +246,10 @@ const SEO = props => {
       {meta?.type === 'Post' && (
         <>
           {meta.publishTime && (
-            <meta property='article:published_time' content={meta.publishTime} />
+            <meta
+              property='article:published_time'
+              content={meta.publishTime}
+            />
           )}
           {meta.modifiedTime && (
             <meta
@@ -234,7 +277,9 @@ const SEO = props => {
       />
 
       {/* DNS预取和预连接 */}
-      {hasWebFontUrl && <link rel='dns-prefetch' href='//fonts.googleapis.com' />}
+      {hasWebFontUrl && (
+        <link rel='dns-prefetch' href='//fonts.googleapis.com' />
+      )}
       <link rel='dns-prefetch' href='//www.google-analytics.com' />
       <link rel='dns-prefetch' href='//www.googletagmanager.com' />
       {hasWebFontUrl && (
@@ -458,8 +503,7 @@ const getSEOMeta = (props, router, locale) => {
         publishDay: post?.publishDay,
         lastEditedDay: post?.lastEditedDay,
         publishTime:
-          getIsoTime(post?.publishDate) ||
-          getIsoTime(post?.date?.start_date),
+          getIsoTime(post?.publishDate) || getIsoTime(post?.date?.start_date),
         modifiedTime: getIsoTime(post?.lastEditedTime || post?.lastEditedDate)
       }
   }

@@ -21,6 +21,7 @@ const CONFIG = {
   HEXO_MENU_ARCHIVE: true, // 显示归档
   HEXO_MENU_SEARCH: true, // 显示搜索
   HEXO_MENU_RANDOM: true, // 显示随机跳转按钮
+  HEXO_LANG_SWITCH: process.env.NEXT_PUBLIC_HEXO_LANG_SWITCH !== 'false', // 多语言站点显示语言切换器
 
   HEXO_POST_LIST_COVER: true, // 列表显示文章封面
   HEXO_POST_LIST_COVER_HOVER_ENLARGE: false, // 列表鼠标悬停放大
